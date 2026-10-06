@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: offerist"
+  short_description: "Офферист — SEO/GEO КП, быстрый Word-формат по референсу, сов"
+  default_prompt: "Используй $offerist: Помоги выполнить эту задачу по моим материалам."

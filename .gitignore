@@ -1,0 +1,14 @@
+.offerist/
+.offerist-bundles/
+.env
+.env.*
+*token*.json
+*credentials*.json
+__pycache__/
+*.pyc
+.venv/
+private/
+client-data/
+local-runs/
+dist/
+.DS_Store

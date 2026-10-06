@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: client-review"
+  short_description: "Независимо разобрать готовое SEO/GEO коммерческое предложени"
+  default_prompt: "Используй $offerist-client-review: Помоги выполнить эту задачу по моим материалам."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: analytics"
+  short_description: "Проверить поисковый трафик, поведение посетителей и настроен"
+  default_prompt: "Используй $offerist-analytics: Помоги выполнить эту задачу по моим материалам."

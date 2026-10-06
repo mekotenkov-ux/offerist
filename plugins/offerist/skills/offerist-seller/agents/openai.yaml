@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: seller"
+  short_description: "Единственный владелец подготовки SEO/GEO КП от постановки за"
+  default_prompt: "Используй $offerist-seller: Помоги выполнить эту задачу по моим материалам."

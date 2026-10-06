@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: commercial"
+  short_description: "Оценить коммерческие факторы, доверие и путь к обращению на "
+  default_prompt: "Используй $offerist-commercial: Помоги выполнить эту задачу по моим материалам."

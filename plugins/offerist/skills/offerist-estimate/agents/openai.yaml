@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: estimate"
+  short_description: "Рассчитать обоснованную стоимость и ресурсы для многоэтапног"
+  default_prompt: "Используй $offerist-estimate: Помоги выполнить эту задачу по моим материалам."

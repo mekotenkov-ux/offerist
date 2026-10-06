@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: gap"
+  short_description: "Сопоставить все обнаруженные страницы сайта с релевантным сп"
+  default_prompt: "Используй $offerist-gap: Помоги выполнить эту задачу по моим материалам."

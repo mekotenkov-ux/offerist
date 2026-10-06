@@ -1,0 +1,34 @@
+{
+  "positions": [
+    {
+      "position": 8,
+      "impressions": 100
+    },
+    {
+      "position": 20,
+      "impressions": 50
+    }
+  ],
+  "pages": [
+    {
+      "url": "https://example.org/a",
+      "action": "optimize"
+    },
+    {
+      "url": "https://example.org/b",
+      "action": "unknown"
+    }
+  ],
+  "missing_clusters": [
+    {
+      "id": "new-1",
+      "intent": "Учебный подтверждённый интент"
+    }
+  ],
+  "continuation": {
+    "eligible_visits": 1000,
+    "continued_visits": 420,
+    "definition": "Учебная когорта: переход на другую содержательную страницу",
+    "same_cohort": true
+  }
+}

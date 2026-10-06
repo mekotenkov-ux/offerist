@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: research"
+  short_description: "Собрать сопоставимые поисковые и конкурентные свидетельства "
+  default_prompt: "Используй $offerist-research: Помоги выполнить эту задачу по моим материалам."

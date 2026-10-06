@@ -1,0 +1,19 @@
+scenario,period,baseline_visits,additional_visits,total_visits,cumulative_additional_visits,assumption
+осторожный,1,575,0.0,575.0,0.0,one cohort; constant baseline; synthetic inputs
+осторожный,2,575,15.5,590.5,15.5,one cohort; constant baseline; synthetic inputs
+осторожный,3,575,31.0,606.0,46.5,one cohort; constant baseline; synthetic inputs
+осторожный,4,575,62.0,637.0,108.5,one cohort; constant baseline; synthetic inputs
+осторожный,5,575,62.0,637.0,170.5,one cohort; constant baseline; synthetic inputs
+осторожный,6,575,62.0,637.0,232.5,one cohort; constant baseline; synthetic inputs
+рабочий,1,575,0.0,575.0,0.0,one cohort; constant baseline; synthetic inputs
+рабочий,2,575,24.5,599.5,24.5,one cohort; constant baseline; synthetic inputs
+рабочий,3,575,49.0,624.0,73.5,one cohort; constant baseline; synthetic inputs
+рабочий,4,575,98.0,673.0,171.5,one cohort; constant baseline; synthetic inputs
+рабочий,5,575,98.0,673.0,269.5,one cohort; constant baseline; synthetic inputs
+рабочий,6,575,98.0,673.0,367.5,one cohort; constant baseline; synthetic inputs
+ускоренный,1,575,0.0,575.0,0.0,one cohort; constant baseline; synthetic inputs
+ускоренный,2,575,33.5,608.5,33.5,one cohort; constant baseline; synthetic inputs
+ускоренный,3,575,67.0,642.0,100.5,one cohort; constant baseline; synthetic inputs
+ускоренный,4,575,134.0,709.0,234.5,one cohort; constant baseline; synthetic inputs
+ускоренный,5,575,134.0,709.0,368.5,one cohort; constant baseline; synthetic inputs
+ускоренный,6,575,134.0,709.0,502.5,one cohort; constant baseline; synthetic inputs

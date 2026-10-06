@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: setup"
+  short_description: "Настроить «Офферист» под одно агентство по подтверждённым ус"
+  default_prompt: "Используй $offerist-setup: Помоги выполнить эту задачу по моим материалам."

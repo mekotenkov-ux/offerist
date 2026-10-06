@@ -1,0 +1,6 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "offerist",
+  "version": "1.0.4-portable.1",
+  "description": "Офферист: совместная разработка SEO/GEO КП, быстрый Word-формат, брифовка и полный доказательный процесс."
+}

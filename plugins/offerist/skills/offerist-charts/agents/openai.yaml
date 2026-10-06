@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: charts"
+  short_description: "Построить графики и диаграммы для КП из проверенных API-данн"
+  default_prompt: "Используй $offerist-charts: Помоги выполнить эту задачу по моим материалам."

@@ -1,0 +1,12 @@
+The Russian morphology dictionary files in ../dicts/ are the unchanged runtime
+dictionary files distributed with Az.js 0.2.3. Az.js dicts/meta.json identifies
+their source as OpenCorpora (opencorpora.org), source version 0.92, revision
+394551, compiled on 2016-04-14. The metadata file is not a runtime asset.
+
+OpenCorpora identifies its morphological dictionary as CC BY-SA 3.0:
+https://opencorpora.org/?page=downloads
+License: https://creativecommons.org/licenses/by-sa/3.0/
+
+Attribution: OpenCorpora — open Russian-language morphological dictionary.
+The Az.js package compiled this dictionary into the DAWG/array/JSON files
+copied here; this integration has not modified those files.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: presentation"
+  short_description: "Превратить готовое SEO/GEO КП в компактную презентацию по за"
+  default_prompt: "Используй $offerist-presentation: Помоги выполнить эту задачу по моим материалам."

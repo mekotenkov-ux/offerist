@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: strategy"
+  short_description: "Собрать из результатов специалистов проверяемую SEO/GEO стра"
+  default_prompt: "Используй $offerist-strategy: Помоги выполнить эту задачу по моим материалам."

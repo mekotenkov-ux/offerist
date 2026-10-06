@@ -1,0 +1,9 @@
+query,frequency,monitored,yandex_rank,google_rank,url,intent,decision
+деревянная мебель,350,yes,8,12,https://example.org/,общий выбор мебели,keep
+столы из массива,600,yes,12,18,https://example.org/tables/,выбор столов,optimize
+дубовый обеденный стол,400,yes,7,9,https://example.org/tables/oak/,выбор дубового стола,optimize
+обеденные столы дуб,250,yes,9,11,https://example.org/tables/oak/,выбор дубового стола,optimize
+деревянные стулья,500,yes,22,29,https://example.org/chairs/,выбор стульев,optimize
+стол на заказ,300,yes,42,55,https://example.org/tables/custom/,изготовление стола,rework
+складной деревянный стол,180,no,,,,складной механизм,create_candidate
+стол массив по размерам,120,no,,,https://example.org/tables/custom/,изготовление стола,optimize_existing

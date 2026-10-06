@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: geo"
+  short_description: "Измерить присутствие бренда и цитирование в реальных AI-отве"
+  default_prompt: "Используй $offerist-geo: Помоги выполнить эту задачу по моим материалам."

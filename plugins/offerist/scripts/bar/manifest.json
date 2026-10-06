@@ -1,0 +1,32 @@
+{
+  "bar_repository": "https://github.com/mekotenkov-ux/bar-relevance-analyzer",
+  "bar_commit": "c99a55f9369a394cbc98a38e6234620313258a11",
+  "bar_package_version": "0.1.0",
+  "snapshot_version": 5,
+  "node_minimum": "22.13.0",
+  "source_sha256": {
+    "source/semantic-analysis.ts": "ccb402a63be50dd21c7571db39682cb417a038291f198d2ff51d7e8c385b035a",
+    "source/language-support.ts": "ea7d2fe3b69af2ce1135dbb66fafff4c85ce4c484efafece4090c69bfefd51f2",
+    "source/phrase-similarity.ts": "36baf0561b8411327c736d19ea868b7c4b9297fdc27a515fa27b91d415ec4b79",
+    "source/russian-morphology.ts": "966624f88367565f8cdeb0c886c5ad7508cf426d2d84cb34f0255ee9eec9a52e"
+  },
+  "dependencies": {
+    "az": "0.2.3",
+    "snowball-stemmers": "0.6.0",
+    "stopword": "3.1.5",
+    "esbuild": "0.28.1"
+  },
+  "dictionary_sha256": {
+    "grammemes.json": "4fa6b4d806693a613e86ceb7615e96b443f756d8134ec58323d9b9eee6aac31d",
+    "gramtab-opencorpora-ext.json": "8c335a2c0aae483230e3cdc22de3a3bba55b7d147ba3da4540418b3abf4f73d8",
+    "gramtab-opencorpora-int.json": "94e953a08c6a2cc8de9b396b096f441fcc5291f3ab3c43f9adfff57c289b04d6",
+    "p_t_given_w.intdawg": "359a4ee4d6bdfb9752080e919ff4b99b2a2bdc87d5c8de9fb6af3e73fac5e908",
+    "paradigms.array": "d8e26bda48129a8da09232ad5e45d211174fed8801dd838ed682ba17b6e65cfc",
+    "prediction-suffixes-0.dawg": "d76953a94cf1da1d2c17eccb30e741a814547b1a9f84a977cfaa1baf3db30670",
+    "prediction-suffixes-1.dawg": "7a2f3206c59fc9c43012edfcea08f46a68e9da9db05d360ba284bb3bb258b275",
+    "prediction-suffixes-2.dawg": "4d1cddfe88f65cb11c85bcc1b30c65b3e26fec1f46c10772d9edf6f41e216922",
+    "suffixes.json": "0da6775148d875e7f1c5e97d4320915b6159142d702ea92ac83c257e676672fd",
+    "words.dawg": "b4c5ea5632e2d80eaf316f85f2177c8a28b74484c6efdb70d9cc1bf36848f182"
+  },
+  "bundle_sha256": "d8bc81a7e01164760b2114789d6e10e7aa847f2e2e035a417464b39209f224b7"
+}

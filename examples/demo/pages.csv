@@ -1,0 +1,7 @@
+url,type,yandex_visits,google_visits,yandex_rank,google_rank,business_priority,group,action,basis
+https://example.org/,home,150,90,8,12,no,strong,keep,Общий вход и полезный поток; сохранить навигацию и распределение спроса
+https://example.org/tables/,category,90,70,12,18,yes,quick,optimize,Подтверждённый интент и позиции рядом с TOP; раскрыть выбор размеров и материалов
+https://example.org/tables/oak/,category,70,50,7,9,yes,strong,optimize,Сильная посадочная приоритетного направления; сохранить охват и улучшить доказательства выбора
+https://example.org/chairs/,category,25,20,22,29,no,quick,optimize,Есть спрос и видимость; очередь после приоритетных столов
+https://example.org/delivery/,service,5,5,,,no,not_applicable,keep,Сервисная задача доставки; не оценивать как поисковую товарную посадочную
+https://example.org/tables/custom/,service_landing,0,0,42,55,yes,weak,rework,Учебно подтверждены спрос и индексирование; слабые позиции и неполное описание изготовления

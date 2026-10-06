@@ -1,0 +1,4 @@
+interface:
+  display_name: "Офферист: audit"
+  short_description: "Проверить технические SEO-проблемы сайта для многоэтапного К"
+  default_prompt: "Используй $offerist-audit: Помоги выполнить эту задачу по моим материалам."
