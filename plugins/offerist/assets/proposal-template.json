@@ -1,0 +1,1009 @@
+{
+  "schema_version": "offerist-fixed-v2",
+  "style": {
+    "page_width_pt": 595.28,
+    "page_height_pt": 841.89,
+    "margin_pt": 54,
+    "content_width_pt": 487.28,
+    "font_family": "Arial",
+    "body_pt": 11,
+    "heading_sizes_pt": [
+      28,
+      20,
+      15
+    ],
+    "caption_pt": 9.5,
+    "table_pt": 10.5,
+    "colors": {
+      "background": "#FFFFFF",
+      "text": "#17212B",
+      "muted": "#52606D",
+      "table_header": "#D9EAF7",
+      "border": "#D8E1E8",
+      "positive": "#D9EAD3",
+      "warning": "#FFF2CC",
+      "negative": "#FCE4DE"
+    }
+  },
+  "sections": [
+    {
+      "id": "cover",
+      "number": "",
+      "title": "Коммерческое предложение",
+      "kind": "cover",
+      "level": 0,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": []
+    },
+    {
+      "id": "goals",
+      "number": "I.",
+      "title": "Задачи и цели",
+      "kind": "content",
+      "level": 1,
+      "required_fields": [
+        "intro",
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "goals",
+          "title": "С чем к нам пришёл клиент",
+          "columns": [
+            "Исходная задача клиента",
+            "Что нам поручено выяснить",
+            "Критерий полезного КП"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "preparation",
+      "number": "I.I.",
+      "title": "Что мы проанализировали",
+      "kind": "content",
+      "level": 2,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "analysis_scope",
+          "title": "Подготовка предложения",
+          "columns": [
+            "Направление",
+            "Проверено",
+            "Главный вывод",
+            "Анализ"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "url"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "competitors",
+      "number": "II.",
+      "title": "Сравнение с конкурентами",
+      "kind": "comparison",
+      "level": 1,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "traffic_pages",
+          "title": "Охват выдачи и оценка органического трафика",
+          "columns": [
+            "Сайт",
+            "URL в ТОП 50 Яндекса",
+            "Яндекс, оценка в сутки",
+            "Google, оценка в сутки"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "integer"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "yandex_visibility",
+          "title": "Видимость в Яндексе",
+          "columns": [
+            "Сайт",
+            "ТОП 3",
+            "ТОП 5",
+            "ТОП 10"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "integer"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "google_visibility",
+          "title": "Видимость в Google",
+          "columns": [
+            "Сайт",
+            "ТОП 3",
+            "ТОП 5",
+            "ТОП 10"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "integer"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "link_comparison",
+          "title": "Ссылочный профиль",
+          "columns": [
+            "Сайт",
+            "Доноры",
+            "Ссылки",
+            "DR"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "number"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "competitor_examples",
+          "title": "Что мы увидели у конкурентов",
+          "columns": [
+            "Страница конкурента",
+            "Что мы обнаружили",
+            "Значение для клиента",
+            "Что мы предлагаем"
+          ],
+          "column_types": [
+            "url",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ],
+      "visual_required": true
+    },
+    {
+      "id": "site_state",
+      "number": "III.",
+      "title": "Состояние сайта",
+      "kind": "summary",
+      "level": 1,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "scores",
+          "title": "Карта состояния и возможностей",
+          "columns": [
+            "Направление",
+            "Состояние из 10",
+            "Потенциал из 10"
+          ],
+          "column_types": [
+            "text",
+            "number",
+            "number"
+          ],
+          "min_rows": 1,
+          "binding": "analysis_scores"
+        }
+      ]
+    },
+    {
+      "id": "semantic",
+      "number": "III.I.",
+      "title": "Семантический охват",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "page_inventory",
+          "title": "Существующие страницы и охват проверки",
+          "columns": [
+            "Тип страниц",
+            "Уже создано",
+            "С данными Яндекса",
+            "С данными Google"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "integer"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "page_cohorts",
+          "title": "Состояние существующих страниц по типам",
+          "columns": [
+            "Тип и поисковая система",
+            "Флагманы",
+            "Точки роста",
+            "Слабые",
+            "Неизвестно"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "integer",
+            "integer"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "page_scope",
+          "title": "Подтверждённый объём улучшения и создания",
+          "columns": [
+            "Тип страниц",
+            "Улучшить",
+            "Создать",
+            "На чём основано решение"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "semantic_examples",
+          "title": "Примеры спроса и наших решений",
+          "required_first_column": [
+            "Флагманы",
+            "Точки роста",
+            "Слабые",
+            "Создать"
+          ],
+          "columns": [
+            "Группа",
+            "Тип страниц",
+            "URL или недостающая тема",
+            "Запросы и наше решение"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "relevance",
+      "number": "III.II.",
+      "title": "Текстовая релевантность",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "relevance_sample",
+          "title": "Какие темы и страницы мы сравнили",
+          "columns": [
+            "Тема и тип страницы",
+            "Наша страница",
+            "Страница конкурента",
+            "Что мы обнаружили"
+          ],
+          "column_types": [
+            "text",
+            "url",
+            "url",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "behavior",
+      "number": "III.II.I.",
+      "title": "Поведение и конверсия",
+      "kind": "analysis",
+      "level": 3,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "journey",
+          "title": "Путь от выдачи до обращения",
+          "columns": [
+            "Этап",
+            "Наблюдение",
+            "Изменение",
+            "Приёмка"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "technical",
+      "number": "III.III.",
+      "title": "Техническое состояние",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "technical_zones",
+          "title": "Масштаб технических проблем",
+          "columns": [
+            "Зона",
+            "Проблема или проверка",
+            "Затронуто",
+            "Проверено"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "integer",
+            "integer"
+          ],
+          "min_rows": 1,
+          "required_first_column": [
+            "Критические",
+            "Серьёзные",
+            "Всё хорошо"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trust",
+      "number": "III.IV.",
+      "title": "Доверие и коммерческие факторы",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "trust_zones",
+          "title": "Факторы выбора подрядчика",
+          "columns": [
+            "Зона",
+            "Фактор",
+            "Состояние",
+            "Изменение"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1,
+          "required_first_column": [
+            "Критические",
+            "Серьёзные",
+            "Всё хорошо"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "structure",
+      "number": "III.V.",
+      "title": "Структура и перелинковка",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "internal_links",
+          "title": "Доступность приоритетных страниц",
+          "columns": [
+            "Группа",
+            "Проверено страниц",
+            "Нужны связи",
+            "Изменение"
+          ],
+          "column_types": [
+            "text",
+            "integer",
+            "integer",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "links",
+      "number": "III.VI.",
+      "title": "Ссылочный профиль",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "link_program",
+          "title": "Основание ссылочной программы",
+          "columns": [
+            "Показатель",
+            "Сайт",
+            "Ориентир конкурентов",
+            "Решение"
+          ],
+          "column_types": [
+            "text",
+            "number",
+            "number",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "reputation",
+      "number": "III.VII.",
+      "title": "Репутация",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "reputation",
+          "title": "Карточки и отзывы",
+          "columns": [
+            "Площадка",
+            "Состояние",
+            "Сравнение с нишей",
+            "Действие"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "geo",
+      "number": "III.VIII.",
+      "title": "Генеративный поиск",
+      "kind": "analysis",
+      "level": 2,
+      "required_fields": [
+        "intro",
+        "analysis_links",
+        "takeaway",
+        "details",
+        "state",
+        "opportunity"
+      ],
+      "tables": [
+        {
+          "id": "opportunities",
+          "title": "Возможности и наши задачи",
+          "columns": [
+            "Что мы нашли",
+            "Возможность",
+            "Что мы сделаем",
+            "Польза для клиента"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "geo_opportunities",
+          "title": "Возможности внешнего присутствия",
+          "columns": [
+            "Тема",
+            "Источник присутствия",
+            "Что подготовим"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "priorities",
+      "number": "IV.",
+      "title": "Приоритеты и стратегия",
+      "kind": "strategy",
+      "level": 1,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "priorities",
+          "title": "Очередь работ",
+          "columns": [
+            "Направление",
+            "Потенциал из 10",
+            "Первый результат",
+            "Почему сейчас"
+          ],
+          "column_types": [
+            "text",
+            "number",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "forecast",
+      "number": "V.",
+      "title": "Модель роста",
+      "kind": "forecast",
+      "level": 1,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "forecast",
+          "title": "Сценарий видимости",
+          "columns": [
+            "Период",
+            "Консервативный индекс",
+            "Рабочий индекс",
+            "Условие"
+          ],
+          "column_types": [
+            "text",
+            "number",
+            "number",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ],
+      "visual_required": true
+    },
+    {
+      "id": "roadmap",
+      "number": "VI.",
+      "title": "Объём работ и дорожная карта",
+      "kind": "roadmap",
+      "level": 1,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "roadmap",
+          "title": "Первые три месяца",
+          "columns": [
+            "Работа",
+            "Месяц 1",
+            "Месяц 2",
+            "Месяц 3"
+          ],
+          "column_types": [
+            "text",
+            "count_or_check",
+            "count_or_check",
+            "count_or_check"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "deliverables",
+      "number": "VII.",
+      "title": "Что получает клиент",
+      "kind": "content",
+      "level": 1,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "deliverables",
+          "title": "Передаваемые результаты",
+          "columns": [
+            "Результат",
+            "Состав",
+            "Как принимаем"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "examples",
+      "number": "VII.I.",
+      "title": "Примеры работ",
+      "kind": "examples",
+      "level": 2,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "examples",
+          "title": "Примеры результата",
+          "columns": [
+            "Материал",
+            "Что показывает",
+            "Ссылка"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "url"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "roles",
+      "number": "VIII.",
+      "title": "Роли и ответственность",
+      "kind": "roles",
+      "level": 1,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "roles",
+          "title": "Распределение ответственности",
+          "columns": [
+            "Работа",
+            "Ответственный",
+            "На чьей стороне"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "optional_text"
+          ],
+          "min_rows": 1
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "number": "IX.",
+      "title": "Стоимость и бюджеты",
+      "kind": "budget",
+      "level": 1,
+      "required_fields": [
+        "takeaway"
+      ],
+      "tables": [
+        {
+          "id": "estimate",
+          "title": "Работы для оценки человеком",
+          "columns": [
+            "Работа",
+            "Единица",
+            "Количество",
+            "Часы",
+            "Ставка",
+            "Сумма"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "number",
+            "human",
+            "human",
+            "human"
+          ],
+          "min_rows": 1
+        },
+        {
+          "id": "external",
+          "title": "Дополнительные бюджеты",
+          "columns": [
+            "Расход",
+            "Единица",
+            "Количество",
+            "Сумма"
+          ],
+          "column_types": [
+            "text",
+            "text",
+            "number",
+            "human"
+          ],
+          "min_rows": 1
+        }
+      ]
+    }
+  ]
+}

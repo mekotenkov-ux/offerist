@@ -46,6 +46,8 @@ python tools/install_skills.py --destination /path/to/your/skills --skill offeri
 
 ## Обновление и проверка
 
+Текущая публичная версия: **1.2.0-evidence-public.1**. После обновления убедитесь, что `plugin list` показывает именно её.
+
 Для GitHub-marketplace в Codex:
 
 ```bash

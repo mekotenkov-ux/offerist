@@ -1,0 +1,13 @@
+{
+  "name": "SiteOne Crawler",
+  "version": "2.5.1",
+  "source": "https://github.com/janreges/siteone-crawler",
+  "release": "https://github.com/janreges/siteone-crawler/releases/tag/v2.5.1",
+  "license": "MIT",
+  "platform": "windows-x64",
+  "archive": "siteone-crawler-v2.5.1-win-x64.zip",
+  "download_url": "https://github.com/janreges/siteone-crawler/releases/download/v2.5.1/siteone-crawler-v2.5.1-win-x64.zip",
+  "archive_sha256": "6b6758daa866df99d9bd7a020b51eaeca2d5f52f3172ec5270f9f96b964c16db",
+  "binary_member": "siteone-crawler/siteone-crawler.exe",
+  "binary_sha256": "b89ace85ed6682f97868e3c189cf5641ccb4d5b0841a556e5bef79557998eee5"
+}

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "scope": "Public synthetic examples; no client originals",
+  "content_role": "Form and reasoning only; never transfer synthetic facts",
+  "references": [
+    {
+      "order": 1,
+      "name": "Синтетический пример прежней формы",
+      "original": "../../assets/reference-proposal.docx",
+      "text": "text/001.txt",
+      "sha256": "b3beb28d1959a400fac6d32491f29179e3977ebea67e34e5c46a7fbca1c8ce24",
+      "bytes": 81904,
+      "characters": 10552,
+      "roles": "method,structure,visual"
+    },
+    {
+      "order": 2,
+      "name": "Учебный голос и доказательства v2",
+      "original": "../voice-reference-public.md",
+      "text": "text/002.txt",
+      "sha256": "f219133f7e379e65f1c3852cf68a6efdeac7b05187dafa9d0fc4eb6f5e329f9e",
+      "bytes": 8365,
+      "characters": 4565,
+      "roles": "method,structure,visual"
+    }
+  ]
+}

@@ -25,9 +25,26 @@ from urllib.request import Request, urlopen
 BASES = ("msk", "gru", "zen", "gkv", "rnd", "ekb", "ufa", "sar", "krr",
          "prm", "sam", "kry", "oms", "kzn", "che", "nsk", "nnv", "vlg",
          "vrn", "spb", "mns", "tmn", "gmns", "tom", "gny")
+# Provider database geography, not a country inferred from its abbreviation.
+BASE_CONTEXT = {
+    "msk": ("yandex", "Москва"), "gru": ("google", "Москва"),
+    "zen": ("dzen", None), "gkv": ("google", "Киев"),
+    "rnd": ("yandex", "Ростов-на-Дону"), "ekb": ("yandex", "Екатеринбург"),
+    "ufa": ("yandex", "Уфа"), "sar": ("yandex", "Саратов"),
+    "krr": ("yandex", "Краснодар"), "prm": ("yandex", "Пермь"),
+    "sam": ("yandex", "Самара"), "kry": ("yandex", "Красноярск"),
+    "oms": ("yandex", "Омск"), "kzn": ("yandex", "Казань"),
+    "che": ("yandex", "Челябинск"), "nsk": ("yandex", "Новосибирск"),
+    "nnv": ("yandex", "Нижний Новгород"), "vlg": ("yandex", "Волгоград"),
+    "vrn": ("yandex", "Воронеж"), "spb": ("yandex", "Санкт-Петербург"),
+    "mns": ("yandex", "Минск"), "tmn": ("yandex", "Тюмень"),
+    "gmns": ("google", "Минск"), "tom": ("yandex", "Томск"),
+    "gny": ("google", "Нью-Йорк"),
+}
 KEYS_REPORTS = {
     "keys-pages": ("/report/simple/organic/sitepages", "it50|desc,url|asc"),
     "keys-keywords": ("/report/simple/organic/keywords", "wsk|desc,word|asc,url|asc"),
+    "keys-gap": ("/report/compare", "wsk|desc,word|asc"),
 }
 ENDPOINTS = {
     "keys-limits": ("keys", "/limits/all", False),
@@ -46,11 +63,12 @@ KEYS_INTERVAL_SECONDS = 1.05  # official limit: 10 requests in 10 seconds
 
 
 @contextmanager
-def _ledger_lock():
+def _ledger_lock(root=None):
     """Serialize cache lookup, budget check, HTTP attempt, snapshot, and ledger."""
     with _LOCAL_LOCK:
-        ROOT.mkdir(parents=True, exist_ok=True)
-        with (ROOT / ".bridge.lock").open("a+b") as lockfile:
+        lockroot = Path(root) if root is not None else ROOT
+        lockroot.mkdir(parents=True, exist_ok=True)
+        with (lockroot / ".bridge.lock").open("a+b") as lockfile:
             lockfile.seek(0)
             if os.name == "nt":
                 import msvcrt
@@ -184,7 +202,18 @@ def _invoke_locked(provider: str, endpoint: str, params: dict, *, paid: bool,
     paid = paid or any(p == provider and e == endpoint and required
                        for p, e, required in ENDPOINTS.values())
     params = dict(params)
-    if endpoint not in {"/limits/all", "/v3/subscription-info/limits-and-usage"}:
+    if provider == "keys" and endpoint == "/report/compare":
+        if params.get("view") != "organic":
+            raise ValueError("Keys.so comparison requires view=organic")
+        for field in ("incl", "excl"):
+            if not params.get(field):
+                raise ValueError(f"{field} is required")
+            params[field] = valid_domain(str(params[field]))
+        if params["incl"] == params["excl"]:
+            raise ValueError("included and excluded domains must differ")
+        if "per_page" in params and (type(params["per_page"]) is not int or params["per_page"] < 1):
+            raise ValueError("per_page must be positive")
+    elif endpoint not in {"/limits/all", "/v3/subscription-info/limits-and-usage"}:
         field = "domain" if provider == "keys" else "target"
         if not params.get(field):
             raise ValueError(f"{field} is required")
@@ -194,8 +223,15 @@ def _invoke_locked(provider: str, endpoint: str, params: dict, *, paid: bool,
     url, dest = _snapshot(provider, endpoint, params)
     if dest.exists() and not refresh:
         try:
-            return {"cache": True, "snapshot": str(dest),
-                    "data": json.loads(dest.read_text(encoding="utf-8"))}
+            cached = json.loads(dest.read_text(encoding="utf-8"))
+            # Older collectors could save a pending Keys.so response as data.
+            # Never expose it as a completed report; a live completed result may replace it.
+            if provider == "keys" and isinstance(cached, dict) and str(cached.get("code")) == "202":
+                if not LIVE_ALLOWED:
+                    return {"error": "report_pending", "provider": provider,
+                            "endpoint": endpoint, "cache": True, "pending": True}
+            else:
+                return {"cache": True, "snapshot": str(dest), "data": cached}
         except (ValueError, OSError) as exc:
             return {"error": type(exc).__name__, "provider": provider,
                     "endpoint": endpoint, "cache": True}
@@ -261,6 +297,13 @@ def _invoke_locked(provider: str, endpoint: str, params: dict, *, paid: bool,
                     except ValueError:
                         pass
             data = json.loads(response.read().decode("utf-8"))
+            if provider == "keys" and isinstance(data, dict) and str(data.get("code")) == "202":
+                row["error_type"] = "report_pending"
+                row["retry_after"] = response.headers.get("Retry-After")
+                record(row)
+                return {"error": "report_pending", "provider": provider,
+                        "endpoint": endpoint, "pending": True,
+                        "retry_after": row["retry_after"]}
             row["rows"] = (len(data["data"]) if isinstance(data, dict) and
                            isinstance(data.get("data"), list) else 1)
             if provider == "ahrefs" and response.headers.get("x-api-rows"):
@@ -308,10 +351,10 @@ def _row_identity(action: str, row: object) -> str | None:
     if action == "keys-pages":
         identity = row.get("url")
     else:
-        identity = row.get("id") or row.get("kid")
+        identity = row.get("id") if row.get("id") is not None else row.get("kid")
         if identity is None:
-            identity = (row.get("word"), row.get("url"))
-            if identity == (None, None):
+            identity = row.get("word") if action == "keys-gap" else (row.get("word"), row.get("url"))
+            if identity is None or identity == (None, None):
                 return None
     if identity is None:
         return None
@@ -319,7 +362,7 @@ def _row_identity(action: str, row: object) -> str | None:
 
 
 def collect_keys(action: str, domain: str, base: str = "msk", *, per_page: int = 25,
-                 max_rows: int | None = None, term: str = "") -> dict:
+                 max_rows: int | None = None, term: str = "", exclude: str | None = None) -> dict:
     """Collect all pages unless a caller explicitly requests preview coverage."""
     if action not in KEYS_REPORTS or base not in BASES or per_page < 1:
         raise ValueError("invalid Keys.so report parameters")
@@ -329,6 +372,16 @@ def collect_keys(action: str, domain: str, base: str = "msk", *, per_page: int =
     endpoint, sort = KEYS_REPORTS[action]
     params = {"base": base, "domain": domain, "page": 1,
               "per_page": per_page, "sort": sort}
+    if action == "keys-gap":
+        if not exclude:
+            raise ValueError("exclude is required for keys-gap")
+        exclude = valid_domain(exclude)
+        if exclude == domain:
+            raise ValueError("included and excluded domains must differ")
+        del params["domain"]
+        params.update({"incl": domain, "excl": exclude, "view": "organic"})
+    elif exclude is not None:
+        raise ValueError("exclude is only for keys-gap")
     if term:
         if action != "keys-keywords" or not re.fullmatch(r"[А-Яа-яЁёA-Za-z ]{2,80}", term):
             raise ValueError("term is valid only for keywords and must contain letters/spaces")
@@ -336,7 +389,7 @@ def collect_keys(action: str, domain: str, base: str = "msk", *, per_page: int =
     # The previous bridge cached just page 1 with a single-column sort. Use
     # it offline as partial evidence; live runs use a stable sort to finish.
     _, preferred_cache = _snapshot("keys", endpoint, params)
-    if not preferred_cache.exists() and not LIVE_ALLOWED:
+    if action != "keys-gap" and not preferred_cache.exists() and not LIVE_ALLOWED:
         legacy_sort = "it50|desc" if action == "keys-pages" else "wsk|desc"
         for legacy_size in dict.fromkeys((per_page, 20)):
             legacy = {**params, "per_page": legacy_size, "sort": legacy_sort}
@@ -424,6 +477,10 @@ def collect_keys(action: str, domain: str, base: str = "msk", *, per_page: int =
                  "newest_snapshot_saved_at": max(times) if times else None,
                  "definition": "File save timestamps, not the provider database date. Complete means page coverage; cached data are not freshly verified."}
     return {"provider": "keys", "action": action, "domain": domain, "base": base,
+            "search_context": {"engine": BASE_CONTEXT[base][0], "region": BASE_CONTEXT[base][1],
+                               "definition": "Provider regional database; not current local SERP",
+                               "source": "https://apidoc.keys.so/"},
+            **({"excluded_domain": exclude, "view": "organic"} if action == "keys-gap" else {}),
             "complete": complete, "incomplete_reason": reason,
             "freshness": freshness,
             "retry_after": retry_after,
@@ -439,6 +496,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("action", choices=[*ENDPOINTS, *KEYS_REPORTS])
     parser.add_argument("--domain")
+    parser.add_argument("--exclude", help="Authorized own domain excluded by keys-gap")
     parser.add_argument("--base", choices=BASES, default="msk")
     parser.add_argument("--per-page", "--rows", type=int, default=25,
                         help="Keys.so request page size; this is not a total row cap")
@@ -474,6 +532,10 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--max-rows is only for Keys.so paginated reports")
     if args.term and args.action != "keys-keywords":
         parser.error("--term is only for keys-keywords")
+    if args.action == "keys-gap" and not args.exclude:
+        parser.error("--exclude required for keys-gap")
+    if args.exclude is not None and args.action != "keys-gap":
+        parser.error("--exclude is only for keys-gap")
     if args.refresh and args.action not in {"keys-limits", "ahrefs-limits"}:
         parser.error("--refresh is only for limits")
     if args.ahrefs_budget_units is not None and args.ahrefs_budget_units < 1:
@@ -484,7 +546,7 @@ def main(argv: list[str] | None = None) -> int:
         try:
             result = collect_keys(args.action, args.domain, args.base,
                                   per_page=args.per_page, max_rows=args.max_rows,
-                                  term=args.term)
+                                  term=args.term, exclude=args.exclude)
         except ValueError as exc:
             parser.error(str(exc))
     else:

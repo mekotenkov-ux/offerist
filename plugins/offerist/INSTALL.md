@@ -1,13 +1,5 @@
-# Установка Оффериста
+# Установка публичной версии
 
-Установка из публичного GitHub-дистрибутива:
+См. [установку и обновление](../../INSTALL.md). Версия 1.2.0-evidence-public.1.
 
-```bash
-codex plugin marketplace add mekotenkov-ux/offerist --ref main
-codex plugin add offerist@seomeat-offerist
-codex plugin list
-```
-
-После установки начните новый чат. Свободный режим: $offerist-assistant; быстрый Word: $offerist-quick; брифовка: $offerist-brief; полный процесс: $offerist-seller.
-
-На https://github.com/mekotenkov-ux/offerist находятся полное русское руководство, инструкция установки скиллов другим агентам, tools/install_skills.py и синтетические примеры. Установка не переносит авторизацию и частный профиль. [Официальная упаковка](https://developers.openai.com/plugins/build/plugins), [подключения](docs/connectors.md).
+Частные эталоны и профили подключаются отдельно через reference_pack и сохраняются вне плагина. Текущий формат — offerist-fixed-v2. Старый JSON требует содержательного переноса данных; переименование версии недостаточно.

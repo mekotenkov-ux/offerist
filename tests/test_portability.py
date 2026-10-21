@@ -20,7 +20,7 @@ class PortableInstall(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             target = Path(tmp) / "agent-skills"
             result = installer.install(target)
-            self.assertEqual(len(result["skills"]), 19)
+            self.assertEqual(len(result["skills"]), 25)
             bundle = Path(result["bundle"])
             self.assertTrue((bundle / "scripts/workflow.py").is_file())
             self.assertTrue((target / "offerist-quick/assets/reference-proposal.docx").is_file())

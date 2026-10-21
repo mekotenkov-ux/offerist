@@ -21,7 +21,7 @@ def validate(root=ROOT):
     assert catalog["name"] == "seomeat-offerist"
     assert catalog["plugins"][0]["source"]["path"] == "./plugins/offerist"
     skills = sorted((plugin / "skills").glob("*/SKILL.md"))
-    assert len(skills) == 19
+    assert len(skills) == 25
     skill_catalog = (root / "docs/skills.md").read_text(encoding="utf-8")
     for path in skills:
         body = path.read_text(encoding="utf-8")

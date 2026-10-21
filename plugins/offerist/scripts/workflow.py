@@ -540,7 +540,7 @@ def stage_artifact_checks(root, refs):
             names(value.get("evidence_refs"), f"{label}.evidence_refs")
 
 
-def pending_item_checks(root, refs, node_id, node):
+def pending_item_checks(root, refs, node_id, node, state=None):
     """A partial attempt names each unresolved item; it cannot hide it in prose."""
     data = checked_object(root, refs["outputs"][PARTIAL_OUTPUT[node_id]], PARTIAL_OUTPUT[node_id])
     items = data.get("pending_items")
@@ -553,6 +553,7 @@ def pending_item_checks(root, refs, node_id, node):
                     "decision": {"decisions"}, "dependency": {"stage"}, "human": {"stage"},
                     "stage": {"stage"}, "source": {"sources", "types", "urls"}}
     seen = set()
+    unknown_blocks = None
     for item in items:
         if not isinstance(item, dict) or not required <= set(item):
             raise ValueError("Pending item lacks required identity, source, reason or denominator fields")
@@ -577,12 +578,22 @@ def pending_item_checks(root, refs, node_id, node):
         if item["scope_kind"] == "dependency" and item["scope_id"] not in node["depends_on"]:
             raise ValueError("Pending dependency does not name a parent node")
         if item["scope_kind"] == "block":
-            block = data if node_id == "block_gap" else previous_output(root, read_json(root / STATE_NAME), "block_gap", "block_register")
-            rows = block.get("rows")
-            if not isinstance(rows, list) or not any(isinstance(row, dict) and
-                    f"{row.get('type_id')}:{row.get('variant_id')}:{row.get('block_id')}" == item["scope_id"]
-                    and row.get("type_id") == item["type_id"]
-                    and row.get("status") == "unknown" for row in rows):
+            if unknown_blocks is None:
+                if node_id == "block_gap":
+                    block = data
+                else:
+                    if state is None:
+                        state = read_json(root / STATE_NAME)
+                    block = previous_output(root, state, "block_gap", "block_register")
+                rows = block.get("rows")
+                if not isinstance(rows, list):
+                    raise ValueError("Pending block must name an unknown canonical block row")
+                unknown_blocks = {
+                    (f"{row.get('type_id')}:{row.get('variant_id')}:{row.get('block_id')}", row["type_id"])
+                    for row in rows if isinstance(row, dict) and row.get("status") == "unknown"
+                    and isinstance(row.get("type_id"), str)
+                }
+            if (item["scope_id"], item["type_id"]) not in unknown_blocks:
                 raise ValueError("Pending block must name an unknown canonical block row")
         if item["scope_kind"] == "job" and node_id == "gap":
             if not any(isinstance(job, dict) and job.get("landing_job_id") == item["scope_id"]
@@ -631,6 +642,15 @@ def typed_evidence_refs(document):
 def consumed_source_bindings(root, refs, node_id):
     """Bind direct, typed source citations of this node, never a global run inventory."""
     bound = {}
+    role_sets = {}
+    resolved_paths = {}
+
+    def resolve_candidate(candidate):
+        # Cache successful exact spellings only for this collection. A later
+        # record/preflight must resolve the filesystem afresh.
+        if candidate not in resolved_paths:
+            resolved_paths[candidate] = relative_file(root, candidate)
+        return resolved_paths[candidate]
 
     def add(path, role, container=None, required=True):
         if not isinstance(path, str) or not path or "://" in path or path.startswith("#"):
@@ -644,7 +664,7 @@ def consumed_source_bindings(root, refs, node_id):
         resolved = None
         for candidate in candidates:
             try:
-                resolved = relative_file(root, candidate)
+                resolved = resolve_candidate(candidate)
                 break
             except ValueError:
                 pass
@@ -653,9 +673,13 @@ def consumed_source_bindings(root, refs, node_id):
                 raise ValueError("Claimed source is missing: " + path)
             return
         relative = resolved.relative_to(root).as_posix()
-        row = bound.setdefault(relative, {"path": relative, "sha256": sha_file(resolved), "roles": []})
-        if role not in row["roles"]:
+        if relative not in bound:
+            bound[relative] = {"path": relative, "sha256": sha_file(resolved), "roles": []}
+            role_sets[relative] = set()
+        row = bound[relative]
+        if role not in role_sets[relative]:
             row["roles"].append(role)
+            role_sets[relative].add(role)
 
     def looks_like_file(value, container):
         if not isinstance(value, str) or "://" in value or value.startswith("#") or value.endswith(":source"):
@@ -670,7 +694,7 @@ def consumed_source_bindings(root, refs, node_id):
             candidates.append(str(Path(container).parent / value).replace("\\", "/"))
         for candidate in candidates:
             try:
-                relative_file(root, candidate)
+                resolve_candidate(candidate)
                 return True  # A saved run-relative file is a source regardless of suffix.
             except ValueError:
                 pass
@@ -4047,7 +4071,7 @@ def partial_coverage_types(root, state, refs, node_id):
                 raise ValueError("Pending BAR row needs an existing or future material task")
             if (row.get("own_score") is not None or row.get("adapter_report_ref") is not None
                     or row.get("input_ref") is not None
-                    or not names(row.get("peer_text_refs"), "pending BAR peer files") <= set(files)
+                    or not names(row.get("peer_text_refs"), "pending BAR peer files", allow_empty=True) <= set(files)
                     or not names(row.get("requirements"), "pending BAR source-backed requirements")
                     or not row.get("change") or not row.get("acceptance")):
                 raise ValueError("Pending BAR work needs saved own/peer text, null score and bounded change")
@@ -5194,7 +5218,7 @@ def record(args):
             primary = checked_object(root, outputs[PARTIAL_OUTPUT[args.node]], PARTIAL_OUTPUT[args.node])
             if primary.get("pending_items") not in (None, []):
                 raise ValueError("Complete attempt cannot retain unresolved pending_items")
-        pending_items = pending_item_checks(root, refs, args.node, node) if not strict else []
+        pending_items = pending_item_checks(root, refs, args.node, node, state) if not strict else []
         stage_content_checks(root, state, refs, args.node, scope, strict)
         coverage_types(root, state, refs, args.node, strict)
         volume_checks(root, state, refs, args.node, strict)
@@ -5308,6 +5332,9 @@ def structure_evidence_refs(root, state, decision):
     """Close permitted typed proof relationships from the current decision."""
     refs = {}
     pins = {}
+    validated_paths = {}
+    file_facts = {}
+    origin_sets = {}
     # A revised decision must not inherit pins from an obsolete proposal or
     # review. Only the decision and its transitive input stages own its proof
     # boundary; conflicting pins within that boundary still fail closed.
@@ -5343,21 +5370,29 @@ def structure_evidence_refs(root, state, decision):
         if (lowered & {"history", "run-history", "self-review", "self_review", "secrets", ".secrets", "tokens", "credentials", ".git", ".offerist", "private", "qa", "deliverables", "client-packet", "structure-packets"}
                 or any(part.startswith(".env") for part in lowered)):
             raise ValueError("Unpermitted structure evidence source: " + ref)
-        target = root / path
-        if any(item.is_symlink() for item in (target, *target.parents) if item != root and item.is_relative_to(root)):
-            raise ValueError("Symlink in structure evidence path: " + ref)
-        target = relative_file(root, path.as_posix())
-        digest = sha_file(target)
-        recorded = pins.get(target.relative_to(root).as_posix())
+        spelling = path.as_posix()
+        if spelling not in validated_paths:
+            target = root / path
+            if any(item.is_symlink() for item in (target, *target.parents) if item != root and item.is_relative_to(root)):
+                raise ValueError("Symlink in structure evidence path: " + ref)
+            validated_paths[spelling] = relative_file(root, spelling)
+        target = validated_paths[spelling]
+        key = target.relative_to(root).as_posix()
+        if key not in file_facts:
+            file_facts[key] = (sha_file(target), target.stat().st_size)
+        digest, size = file_facts[key]
+        recorded = pins.get(key)
         if recorded is not None and recorded != {digest}:
             raise ValueError("Recorded structure evidence changed or has conflicting pins: " + ref)
         if expected_sha is not None and expected_sha != digest:
             raise ValueError("Structure evidence SHA mismatch: " + ref)
-        key = target.relative_to(root).as_posix()
-        entry = refs.setdefault(key, {"path": key, "bytes": target.stat().st_size,
-                                      "sha256": digest, "origins": []})
-        if origin not in entry["origins"]:
+        if key not in refs:
+            refs[key] = {"path": key, "bytes": size, "sha256": digest, "origins": []}
+            origin_sets[key] = set()
+        entry = refs[key]
+        if origin not in origin_sets[key]:
             entry["origins"].append(origin)
+            origin_sets[key].add(origin)
 
     add(state["attempts"]["decision_map"][-1]["outputs"]["decision_map"]["path"],
         "recorded_decision_map")
