@@ -15,6 +15,8 @@ import re
 import struct
 from urllib.parse import urlsplit
 
+from evidence_contract import VERSION as EVIDENCE_VERSION, validate_handoff
+
 
 TEMPLATE_PATH = Path(__file__).resolve().parents[1] / "assets" / "proposal-template.json"
 SCHEMA_VERSION = "offerist-fixed-v2"
@@ -170,6 +172,7 @@ def init_proposal(template: dict | None = None) -> dict:
     return {
         "schema_version": SCHEMA_VERSION, "mode": "client",
         "client": {"name": "", "domain": "", "date": ""}, "sections": sections,
+        "research_handoff": {"version": EVIDENCE_VERSION, "sources": [], "sections": []},
     }
 
 
@@ -346,7 +349,7 @@ def validate(proposal, template: dict | None = None, *, client_ready: bool = Fal
     if not isinstance(proposal, dict):
         error("$", "$", "Proposal must be an object")
         return errors
-    for key in set(proposal) - {"schema_version", "mode", "client", "sections"}:
+    for key in set(proposal) - {"schema_version", "mode", "client", "sections", "research_handoff"}:
         error("$", key, "Unsupported proposal field")
     if proposal.get("schema_version") != template["schema_version"]:
         error("$", "schema_version", "Schema must match the selected template")
@@ -394,6 +397,14 @@ def validate(proposal, template: dict | None = None, *, client_ready: bool = Fal
         if section_id not in expected_ids:
             error(section_id, "id", "Unknown section")
 
+    errors.extend(validate_handoff(
+        proposal, [s["id"] for s in template["sections"] if analytical_section(s) or s["id"] == "forecast"],
+        client_ready=client_ready,
+    ))
+    handoff = proposal.get("research_handoff")
+    handoff_reviews = handoff.get("sections", []) if isinstance(handoff, dict) else []
+    unavailable = {r.get("section_id") for r in handoff_reviews if isinstance(r, dict) and r.get("status") == "unavailable"} if isinstance(handoff_reviews, list) else set()
+
     for definition in template["sections"]:
         section_id = definition["id"]
         record = by_id.get(section_id)
@@ -425,7 +436,7 @@ def validate(proposal, template: dict | None = None, *, client_ready: bool = Fal
             if is_analysis and isinstance(record.get("intro"), str) and not re.search(r"(?<!\w)мы(?!\w)", record["intro"], re.I):
                 error(section_id, "intro", "Describe the analysis from the agency's point of view: «Мы …»")
         if is_analysis or "analysis_links" in record:
-            links(record.get("analysis_links"), section_id, "analysis_links", required=is_analysis)
+            links(record.get("analysis_links"), section_id, "analysis_links", required=is_analysis and section_id not in unavailable)
         if is_analysis or "details" in record:
             details(record.get("details"), section_id, required=is_analysis)
         if _text(record.get("takeaway")):
