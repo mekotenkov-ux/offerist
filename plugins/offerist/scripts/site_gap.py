@@ -384,6 +384,53 @@ def rank_cohort_comparison(own_rows, peer_rows, own_scope, peer_scope, source):
     return result
 
 
+def external_comparison(demand, competitors, client_domain):
+    """Check declared external bindings; source contents still require author review."""
+    comparison = demand.get("comparison")
+    if comparison is None:
+        return {"mode": "internal_only", "external_basis_present": False,
+                "source_slices_complete": False, "linked_cluster_ids": [], "reason": "external_comparison_not_reported"}
+    if not isinstance(comparison, dict) or comparison.get("mode") not in {"search", "structure"}:
+        raise ValueError("demand comparison needs mode search or structure")
+    sources = demand.get("sources", [])
+    if not isinstance(sources, list) or any(not isinstance(ref, str) or not ref.strip() for ref in sources):
+        raise ValueError("demand sources must list nonempty saved source references")
+    peers = comparison.get("peers", [])
+    if not isinstance(peers, list):
+        raise ValueError("demand comparison peers must be a list")
+    normalize = lambda domain: domain.lower().rstrip(".").removeprefix("www.")
+    relevant = {normalize(peer["domain"]) for peer in competitors if peer.get("relevant") is True}
+    peer_sources, slices_complete = {}, bool(peers)
+    for peer in peers:
+        domain = peer.get("domain") if isinstance(peer, dict) else None
+        if not isinstance(domain, str) or not domain.strip():
+            raise ValueError("external peer needs a domain")
+        domain = normalize(domain)
+        if domain == normalize(client_domain) or domain not in relevant or domain in peer_sources:
+            raise ValueError("external comparison needs distinct relevant competitors, not the client itself")
+        refs = peer.get("source_refs", [])
+        if (not isinstance(refs, list) or not refs or any(not isinstance(ref, str) or ref not in sources for ref in refs)):
+            raise ValueError("external peer source_refs must bind saved demand sources")
+        peer_sources[domain] = set(refs)
+        slices_complete = slices_complete and peer.get("complete") is True
+    linked = []
+    for cluster in demand.get("clusters", []):
+        refs, urls = cluster.get("source_refs", []), cluster.get("peer_urls", [])
+        if (not isinstance(refs, list) or any(not isinstance(ref, str) or ref not in sources for ref in refs)
+                or not isinstance(urls, list) or any(not isinstance(url, str) for url in urls)):
+            raise ValueError("demand cluster needs saved source_refs and a list of peer URLs")
+        for url in urls:
+            parsed = urlsplit(url)
+            domain = normalize(parsed.hostname or "")
+            if (parsed.scheme in {"http", "https"} and not parsed.username and not parsed.password
+                    and domain in peer_sources and peer_sources[domain].intersection(refs)):
+                linked.append(cluster["id"])
+                break
+    return {"mode": comparison["mode"], "external_basis_present": bool(linked),
+            "source_slices_complete": slices_complete, "linked_cluster_ids": linked,
+            "reason": "source_bound_external_comparison" if linked else "no_source_bound_peer_cluster"}
+
+
 def summarize(data):
     inventory = data["inventory"]
     pages = inventory["pages"]
@@ -446,7 +493,12 @@ def summarize(data):
         if status != "unknown" and (not cluster.get("evidence") or not cluster.get("basis")):
             raise ValueError("reviewed demand clusters need evidence and basis")
         demand_counts[status] += 1
-    demand_complete = bool(demand_clusters) and demand_complete_declared and bool(demand.get("scope")) and bool(demand.get("sources")) and not demand_counts["unknown"]
+    comparison = external_comparison(demand, data.get("competitors", []), data["client_domain"])
+    reviewed_demand = (bool(demand_clusters) and demand_complete_declared and bool(demand.get("scope"))
+                       and comparison["external_basis_present"] and comparison["source_slices_complete"]
+                       and not demand_counts["unknown"] and not demand_counts["needs_business_answer"])
+    demand_complete = reviewed_demand and comparison["mode"] == "search"
+    structural_complete = reviewed_demand and comparison["mode"] == "structure"
 
     missing = data.get("missing_intents", [])
     intent_ids = set()
@@ -894,8 +946,10 @@ def summarize(data):
                 "by_type": {kind: {"assessed": sum(counts.values()) - counts["unknown"], "unknown": counts["unknown"]} for kind, counts in sorted(type_actions.items())},
             },
             "demand_review": {
-                "status": "complete_in_declared_scope" if demand_complete else "partial" if demand_clusters else "not_reported",
+                "status": "complete_in_declared_scope" if demand_complete else "structural_complete_in_declared_scope" if structural_complete else "partial" if demand_clusters else "not_reported",
                 "complete": demand_complete,
+                "structural_complete": structural_complete,
+                "comparison": comparison,
                 "clusters_observed": len(demand_clusters),
                 "status_counts": dict(demand_counts),
                 "scope": demand.get("scope"),

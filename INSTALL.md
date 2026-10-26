@@ -46,7 +46,7 @@ python tools/install_skills.py --destination /path/to/your/skills --skill offeri
 
 ## Обновление и проверка
 
-Текущая публичная версия: **1.3.0-sources.1**. После обновления убедитесь, что `plugin list` показывает именно её.
+Версия комплекта: **1.3.4-links.1**. После обновления убедитесь, что `plugin list` показывает именно её.
 
 Для GitHub-marketplace в Codex:
 

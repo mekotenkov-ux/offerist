@@ -431,6 +431,10 @@ def validate(proposal, template: dict | None = None, *, client_ready: bool = Fal
             if isinstance(record.get(field), str) and re.search(r"\{\{.+?\}\}|\bTODO\b|\[заполнить\]", record[field], re.I):
                 error(section_id, field, "Unfilled placeholder")
         is_analysis = analytical_section(definition)
+        if client_ready and definition["kind"] == "analysis":
+            state = record.get("state")
+            if not isinstance(state, dict) or state.get("value") is None:
+                error(section_id, "state.value", "A final audit needs a scoped state score; resolve the data request and assess the available evidence before release")
         if is_analysis or section_id == "goals" or _text(record.get("intro")):
             prose(record.get("intro"), section_id, "intro", plain=True)
             if is_analysis and isinstance(record.get("intro"), str) and not re.search(r"(?<!\w)мы(?!\w)", record["intro"], re.I):

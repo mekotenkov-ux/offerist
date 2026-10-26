@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "offerist",
-  "version": "1.3.0-sources.1",
+  "version": "1.3.4-links.1",
   "description": "SEO/GEO КП по фиксированному шаблону: голос «мы», понятные анализы, реальные доказательства, оценки, объёмы и график работ."
 }

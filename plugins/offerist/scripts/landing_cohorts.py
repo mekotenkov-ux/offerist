@@ -1,4 +1,4 @@
-"""Group landing URLs by engine and structural type using a declared working heuristic."""
+"""Describe own URL visibility; external demand and competitor GAP are not assessed."""
 import argparse
 from collections import Counter
 import csv
@@ -89,7 +89,8 @@ def analyze(inventory, rankings):
             "inventory_urls": len(types), "observed_urls": observed, "unobserved_urls": missing,
             "zero_in_source_urls": zero, "source_only_urls": outside, "total_urls": len(urls),
             "keyword_coverage": "unknown; source sample is not the complete search demand"})
-    summary = {"method": "working heuristic, not a reference requirement or a verified scope of work",
+    summary = {"analysis_kind": "own_visibility_diagnostic", "external_gap_assessed": False,
+        "method": "working heuristic, not a reference requirement or a verified scope of work",
         "rules": {"strong": "top50 >= 3 and top5/top50 > 0.5",
                   "quick_win": "otherwise top50 >= 3 and top10/top50 > 0.5",
                   "substantial_candidate": "otherwise top50 >= 3",
@@ -97,7 +98,8 @@ def analyze(inventory, rankings):
                   "no_rank_data": "top50 = 0 or URL unobserved in this engine",
                   "low_sample": "observed top50 < 3; unobserved is unknown",
                   "boundary": "exactly 50% falls into the next conservative cohort"},
-        "limitations": ["Position distribution does not prove a defect, required rewrite or implementation scope.",
+        "limitations": ["Own URL cohorts do not establish external demand coverage or missing pages; a competitor comparison is required.",
+                        "Position distribution does not prove a defect, required rewrite or implementation scope.",
                         "No brand/frequency classification is inferred; engines and snapshots are kept separate."],
         "counts": [{"engine": e, "page_type": p, "cohort": c, "urls": n} for (e, p, c), n in sorted(counts.items())],
         "coverage": coverage}

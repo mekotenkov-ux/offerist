@@ -213,7 +213,7 @@ class SourceHandoff(unittest.TestCase):
         template["sections"] = [definition]
         record = self.proposal["sections"][0]
         record.update(intro="Мы проверили исходный отчёт.", takeaway="Подтверждена ограниченная выборка.",
-                      state={"value": None, "reason": "Insufficient sample."}, opportunity={"value": None, "reason": "Insufficient sample."},
+                      state={"value": 6, "reason": "Expert assessment of the inspected text only; observed strengths and limits are documented."}, opportunity={"value": None, "reason": "Insufficient sample."},
                       action="Проверим дополнительные сопоставимые страницы.", source="Original report and direct author inspection.",
                       source_url=None, visual=None, visual_explanation="", details=[
                           {"type": "paragraph", "text": "Observed page comparison; market extrapolation is unavailable."},
